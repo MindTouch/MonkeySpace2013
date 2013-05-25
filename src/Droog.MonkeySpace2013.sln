@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Droog.MonkeySpace2013.Server", "Droog.MonkeySpace2013.Server\Droog.MonkeySpace2013.Server.csproj", "{98AB9029-8963-4B05-B9F1-842DE9C404AA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MindTouch.Clacks", "MindTouch.Clacks", "{CDCE24DC-9B32-45A2-A956-796B029112B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MindTouch.Clacks.Server", "..\MindTouch.Clacks\src\MindTouch.Clacks.Server\MindTouch.Clacks.Server.csproj", "{07E3829C-6A07-462C-8A1C-9FC5F227AAA5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MindTouch.Clacks.Client", "..\MindTouch.Clacks\src\MindTouch.Clacks.Client\MindTouch.Clacks.Client.csproj", "{8D5353C8-E5C9-4DC2-BB15-DC4CC52B17AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Droog.MonkeySpace2013.Mud", "Droog.MonkeySpace2013.Mud\Droog.MonkeySpace2013.Mud.csproj", "{619803A0-F5D2-43A6-9543-682077D57B72}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{98AB9029-8963-4B05-B9F1-842DE9C404AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98AB9029-8963-4B05-B9F1-842DE9C404AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98AB9029-8963-4B05-B9F1-842DE9C404AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98AB9029-8963-4B05-B9F1-842DE9C404AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07E3829C-6A07-462C-8A1C-9FC5F227AAA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07E3829C-6A07-462C-8A1C-9FC5F227AAA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07E3829C-6A07-462C-8A1C-9FC5F227AAA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07E3829C-6A07-462C-8A1C-9FC5F227AAA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D5353C8-E5C9-4DC2-BB15-DC4CC52B17AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D5353C8-E5C9-4DC2-BB15-DC4CC52B17AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D5353C8-E5C9-4DC2-BB15-DC4CC52B17AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D5353C8-E5C9-4DC2-BB15-DC4CC52B17AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{619803A0-F5D2-43A6-9543-682077D57B72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{619803A0-F5D2-43A6-9543-682077D57B72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{619803A0-F5D2-43A6-9543-682077D57B72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{619803A0-F5D2-43A6-9543-682077D57B72}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{07E3829C-6A07-462C-8A1C-9FC5F227AAA5} = {CDCE24DC-9B32-45A2-A956-796B029112B0}
+		{8D5353C8-E5C9-4DC2-BB15-DC4CC52B17AB} = {CDCE24DC-9B32-45A2-A956-796B029112B0}
+	EndGlobalSection
+EndGlobal
