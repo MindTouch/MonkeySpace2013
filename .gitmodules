@@ -1,0 +1,3 @@
+[submodule "MindTouch.Clacks"]
+	path = MindTouch.Clacks
+	url = git@github.com:sdether/MindTouch.Clacks.git
