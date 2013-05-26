@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace Droog.MonkeySpace2013.Mud {
     public class Dungeon {
@@ -9,13 +10,52 @@ namespace Droog.MonkeySpace2013.Mud {
             look,
             go,
             quit,
-            say
+            say,
+            info
         };
 
         public static void Main() {
-
+            BlitDemo();
             var dungeon = new Dungeon();
             dungeon.Run();
+        }
+
+        private static void BlitDemo() {
+            var buffer = new[] {
+                "+------------------------+",
+                "| Hi there               |",
+                "| this is just some text |",
+                "| to blit to the console |",
+                "+------------------------+"
+            };
+            var r = new Random();
+            var w = buffer[0].Length;
+            var h = buffer.Length;
+            //Blit(buffer, 0, 0);
+            //Thread.Sleep(1000);
+            //Blit(buffer, 0, Console.WindowHeight - h);
+            //Thread.Sleep(1000);
+            //Blit(buffer, Console.WindowWidth - w, 0);
+            //Thread.Sleep(1000);
+            //Blit(buffer, Console.WindowWidth - w, Console.WindowHeight - h);
+            //Console.ReadKey();
+            Console.CursorVisible = false;
+            while(true) {
+                var top = r.Next(Console.WindowHeight - h - 1);
+                var left = r.Next(Console.WindowWidth - w - 1);
+                Blit(buffer, left, top);
+                //Thread.Sleep(1000);
+            }
+
+        }
+
+        private static void Blit(string[] buffer, int left, int top) {
+            foreach(var line in buffer) {
+                Console.SetCursorPosition(left, top);
+                Console.Write(line);
+                top++;
+                Console.SetCursorPosition(0,0);
+            }
         }
 
         private string[] _commandList = Enum.GetValues(typeof(Cmd)).Cast<Cmd>().Select(x => x.ToString()).ToArray();
@@ -30,8 +70,9 @@ namespace Droog.MonkeySpace2013.Mud {
         }
 
         public void Run() {
-
-            var le = new LineEditor("dungeon") { TabAtStartCompletes = true, AutoCompleteEvent = AutoComplete };
+            Console.SetCursorPosition(0, Console.WindowHeight);
+            var window = new ConsoleWindow();
+            var le = new LineEditor(window, "dungeon") { TabAtStartCompletes = true, AutoCompleteEvent = AutoComplete };
             Console.WriteLine(player.Look());
             string line = "";
             while((line = le.Edit(GetPrompt(), "")) != null) {
@@ -58,6 +99,9 @@ namespace Droog.MonkeySpace2013.Mud {
                     case Cmd.say:
                         var said = line.Substring(line.IndexOf(" ")).Trim();
                         player.Say(said);
+                        break;
+                    case Cmd.info:
+                        Console.WriteLine("[{0},{1}],[{2},{3}]", Console.WindowWidth, Console.WindowHeight, Console.CursorLeft, Console.CursorTop);
                         break;
                     default:
                         continue;

@@ -13,7 +13,7 @@
 //
 // TODO:
 //    Enter an error (a = 1);  Notice how the prompt is in the wrong line
-//		This is caused by Stderr not being tracked by System.Console.
+//		This is caused by Stderr not being tracked by System.window.
 //    Completion support
 //    Why is Thread.Interrupt not working?   Currently I resort to Abort which is too much.
 //
@@ -139,10 +139,12 @@ namespace Droog.MonkeySpace2013.Mud {
         public AutoCompleteHandler AutoCompleteEvent;
 
         static Handler[] handlers;
+        private readonly IWindow window;
 
-        public LineEditor(string name) : this(name, 10) { }
+        public LineEditor(IWindow window, string name) : this(window, name, 10) { }
 
-        public LineEditor(string name, int histsize) {
+        public LineEditor(IWindow window, string name, int histsize) {
+            this.window = window;
             handlers = new Handler[] {
 				new Handler (ConsoleKey.Home,       CmdHome),
 				new Handler (ConsoleKey.End,        CmdEnd),
@@ -178,13 +180,13 @@ namespace Droog.MonkeySpace2013.Mud {
 				//Handler.Control ('T', CmdDebug),
 
 				// quote
-				Handler.Control ('Q', delegate { HandleChar (Console.ReadKey (true).KeyChar); })
+				Handler.Control ('Q', () => HandleChar(window.ReadKey(true).KeyChar))
 			};
 
             rendered_text = new StringBuilder();
             text = new StringBuilder();
 
-            history = new History(name, histsize);
+            history = new History(window, name, histsize);
 
             //if (File.Exists ("log"))File.Delete ("log");
             //log = File.CreateText ("log"); 
@@ -192,31 +194,31 @@ namespace Droog.MonkeySpace2013.Mud {
 
         void CmdDebug() {
             history.Dump();
-            Console.WriteLine();
+            window.WriteLine();
             Render();
         }
 
         void Render() {
-            Console.Write(shown_prompt);
-            Console.Write(rendered_text);
+            window.Write(shown_prompt);
+            window.Write(rendered_text);
 
             int max = System.Math.Max(rendered_text.Length + shown_prompt.Length, max_rendered);
 
             for(int i = rendered_text.Length + shown_prompt.Length; i < max_rendered; i++)
-                Console.Write(' ');
+                window.Write(' ');
             max_rendered = shown_prompt.Length + rendered_text.Length;
 
             // Write one more to ensure that we always wrap around properly if we are at the
             // end of a line.
-            Console.Write(' ');
+            window.Write(' ');
 
             UpdateHomeRow(max);
         }
 
         void UpdateHomeRow(int screenpos) {
-            int lines = 1 + (screenpos / Console.WindowWidth);
+            int lines = 1 + (screenpos / window.WindowWidth);
 
-            home_row = Console.CursorTop - (lines - 1);
+            home_row = window.CursorTop - (lines - 1);
             if(home_row < 0)
                 home_row = 0;
         }
@@ -227,14 +229,14 @@ namespace Droog.MonkeySpace2013.Mud {
             int i;
 
             for(i = rpos; i < rendered_text.Length; i++)
-                Console.Write(rendered_text[i]);
+                window.Write(rendered_text[i]);
 
             if((shown_prompt.Length + rendered_text.Length) > max_rendered)
                 max_rendered = shown_prompt.Length + rendered_text.Length;
             else {
                 int max_extra = max_rendered - shown_prompt.Length;
                 for(; i < max_extra; i++)
-                    Console.Write(' ');
+                    window.Write(' ');
             }
         }
 
@@ -286,7 +288,7 @@ namespace Droog.MonkeySpace2013.Mud {
 
         int LineCount {
             get {
-                return (shown_prompt.Length + rendered_text.Length) / Console.WindowWidth;
+                return (shown_prompt.Length + rendered_text.Length) / window.WindowWidth;
             }
         }
 
@@ -294,12 +296,12 @@ namespace Droog.MonkeySpace2013.Mud {
             cursor = newpos;
 
             int actual_pos = shown_prompt.Length + TextToRenderPos(cursor);
-            int row = home_row + (actual_pos / Console.WindowWidth);
-            int col = actual_pos % Console.WindowWidth;
+            int row = home_row + (actual_pos / window.WindowWidth);
+            int col = actual_pos % window.WindowWidth;
 
-            if(row >= Console.BufferHeight)
-                row = Console.BufferHeight - 1;
-            Console.SetCursorPosition(col, row);
+            if(row >= window.BufferHeight)
+                row = window.BufferHeight - 1;
+            window.SetCursorPosition(col, row);
 
             //log.WriteLine ("Going to cursor={0} row={1} col={2} actual={3} prompt={4} ttr={5} old={6}", newpos, row, col, actual_pos, prompt.Length, TextToRenderPos (cursor), cursor);
             //log.Flush ();
@@ -318,7 +320,7 @@ namespace Droog.MonkeySpace2013.Mud {
             ComputeRendered();
             if(prev_lines != LineCount) {
 
-                Console.SetCursorPosition(0, home_row);
+                window.SetCursorPosition(0, home_row);
                 Render();
                 ForceCursor(++cursor);
             } else {
@@ -383,13 +385,13 @@ namespace Droog.MonkeySpace2013.Mud {
                         if(last != -1) {
                             InsertTextAtCursor(completions[0].Substring(0, last + 1));
                         }
-                        Console.WriteLine();
+                        window.WriteLine();
                         foreach(string s in completions) {
-                            Console.Write(completion.Prefix);
-                            Console.Write(s);
-                            Console.WriteLine();
+                            window.Write(completion.Prefix);
+                            window.Write(s);
+                            window.WriteLine();
                         }
-                        Console.WriteLine();
+                        window.WriteLine();
                         Render();
                         ForceCursor(cursor);
                     }
@@ -455,7 +457,7 @@ namespace Droog.MonkeySpace2013.Mud {
             if(text.Length == 0) {
                 done = true;
                 text = null;
-                Console.WriteLine();
+                window.WriteLine();
                 return;
             }
 
@@ -598,7 +600,7 @@ namespace Droog.MonkeySpace2013.Mud {
             text.Insert(cursor, str);
             ComputeRendered();
             if(prev_lines != LineCount) {
-                Console.SetCursorPosition(0, home_row);
+                window.SetCursorPosition(0, home_row);
                 Render();
                 cursor += str.Length;
                 ForceCursor(cursor);
@@ -689,7 +691,7 @@ namespace Droog.MonkeySpace2013.Mud {
         }
 
         void CmdRefresh() {
-            Console.Clear();
+            window.Clear();
             max_rendered = 0;
             Render();
             ForceCursor(cursor);
@@ -716,9 +718,9 @@ namespace Droog.MonkeySpace2013.Mud {
             while(!done) {
                 ConsoleModifiers mod;
 
-                cki = Console.ReadKey(true);
+                cki = window.ReadKey(true);
                 if(cki.Key == ConsoleKey.Escape) {
-                    cki = Console.ReadKey(true);
+                    cki = window.ReadKey(true);
 
                     mod = ConsoleModifiers.Alt;
                 } else
@@ -765,13 +767,13 @@ namespace Droog.MonkeySpace2013.Mud {
         }
 
         void SetText(string newtext) {
-            Console.SetCursorPosition(0, home_row);
+            window.SetCursorPosition(0, home_row);
             InitText(newtext);
         }
 
         void SetPrompt(string newprompt) {
             shown_prompt = newprompt;
-            Console.SetCursorPosition(0, home_row);
+            window.SetCursorPosition(0, home_row);
             Render();
             ForceCursor(cursor);
         }
@@ -779,7 +781,7 @@ namespace Droog.MonkeySpace2013.Mud {
         public string Edit(string prompt, string initial) {
             edit_thread = Thread.CurrentThread;
             searching = 0;
-            Console.CancelKeyPress += InterruptEdit;
+            window.CancelKeyPress += InterruptEdit;
 
             done = false;
             history.CursorToEnd();
@@ -796,14 +798,14 @@ namespace Droog.MonkeySpace2013.Mud {
                 } catch(ThreadAbortException) {
                     searching = 0;
                     Thread.ResetAbort();
-                    Console.WriteLine();
+                    window.WriteLine();
                     SetPrompt(prompt);
                     SetText("");
                 }
             } while(!done);
-            Console.WriteLine();
+            window.WriteLine();
 
-            Console.CancelKeyPress -= InterruptEdit;
+            window.CancelKeyPress -= InterruptEdit;
 
             if(text == null) {
                 history.Close();
@@ -826,18 +828,20 @@ namespace Droog.MonkeySpace2013.Mud {
         // history are recorded
         //
         class History {
+            private readonly IWindow window;
             string[] history;
             int head, tail;
             int cursor, count;
             string histfile;
 
-            public History(string app, int size) {
+            public History(IWindow window, string app, int size) {
+                this.window = window;
                 if(size < 1)
                     throw new ArgumentException("size");
 
                 if(app != null) {
                     string dir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                    //Console.WriteLine (dir);
+                    //window.WriteLine (dir);
                     if(!Directory.Exists(dir)) {
                         try {
                             Directory.CreateDirectory(dir);
@@ -885,7 +889,7 @@ namespace Droog.MonkeySpace2013.Mud {
             // Appends a value to the history
             //
             public void Append(string s) {
-                //Console.WriteLine ("APPENDING {0} {1}", s, Environment.StackTrace);
+                //window.WriteLine ("APPENDING {0} {1}", s, Environment.StackTrace);
                 history[head] = s;
                 head = (head + 1) % history.Length;
                 if(head == tail)
@@ -918,7 +922,7 @@ namespace Droog.MonkeySpace2013.Mud {
             }
 
             public bool PreviousAvailable() {
-                //Console.WriteLine ("h={0} t={1} cursor={2}", head, tail, cursor);
+                //window.WriteLine ("h={0} t={1} cursor={2}", head, tail, cursor);
                 if(count == 0 || cursor == tail)
                     return false;
 
@@ -965,9 +969,9 @@ namespace Droog.MonkeySpace2013.Mud {
             }
 
             public void Dump() {
-                Console.WriteLine("Head={0} Tail={1} Cursor={2}", head, tail, cursor);
+                window.WriteLine("Head={0} Tail={1} Cursor={2}", head, tail, cursor);
                 for(int i = 0; i < history.Length; i++) {
-                    Console.WriteLine(" {0} {1}: {2}", i == cursor ? "==>" : "   ", i, history[i]);
+                    window.WriteLine(" {0} {1}: {2}", i == cursor ? "==>" : "   ", i, history[i]);
                 }
                 //log.Flush ();
             }
