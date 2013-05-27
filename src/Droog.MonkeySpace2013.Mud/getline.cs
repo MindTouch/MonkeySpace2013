@@ -139,11 +139,11 @@ namespace Droog.MonkeySpace2013.Mud {
         public AutoCompleteHandler AutoCompleteEvent;
 
         static Handler[] handlers;
-        private readonly IWindow window;
+        private readonly IView window;
 
-        public LineEditor(IWindow window, string name) : this(window, name, 10) { }
+        public LineEditor(IView window, string name) : this(window, name, 10) { }
 
-        public LineEditor(IWindow window, string name, int histsize) {
+        public LineEditor(IView window, string name, int histsize) {
             this.window = window;
             handlers = new Handler[] {
 				new Handler (ConsoleKey.Home,       CmdHome),
@@ -828,13 +828,13 @@ namespace Droog.MonkeySpace2013.Mud {
         // history are recorded
         //
         class History {
-            private readonly IWindow window;
+            private readonly IView window;
             string[] history;
             int head, tail;
             int cursor, count;
             string histfile;
 
-            public History(IWindow window, string app, int size) {
+            public History(IView window, string app, int size) {
                 this.window = window;
                 if(size < 1)
                     throw new ArgumentException("size");

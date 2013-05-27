@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Droog.MonkeySpace2013.Mud {
-    public class ConsoleWindow : IWindow {
+    public class ConsoleView : IView {
         public void WriteLine(string format, params object[] args) {
             Console.WriteLine(format, args);
         }
@@ -15,8 +15,8 @@ namespace Droog.MonkeySpace2013.Mud {
             remove { Console.CancelKeyPress -= value; }
         }
 
-        public void SetCursorPosition(int col, int row) {
-            Console.SetCursorPosition(col, row);
+        public void SetCursorPosition(int left, int top) {
+            Console.SetCursorPosition(left, top);
         }
 
         public ConsoleKeyInfo ReadKey(bool intercept) {
@@ -39,6 +39,7 @@ namespace Droog.MonkeySpace2013.Mud {
             get { return Console.WindowWidth; }
             set { Console.WindowHeight = value; }
         }
+
         public int BufferHeight {
             get { return Console.BufferHeight; }
             set { Console.BufferHeight = value; }

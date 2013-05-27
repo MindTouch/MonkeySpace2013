@@ -15,9 +15,44 @@ namespace Droog.MonkeySpace2013.Mud {
         };
 
         public static void Main() {
-            BlitDemo();
+            //BlitDemo();
+            //ViewDemo();
             var dungeon = new Dungeon();
             dungeon.Run();
+        }
+
+        private static void ViewDemo() {
+            var text = new[] {
+@"Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Donec vel nisi ac enim ullamcorper laoreet at ultricies arcu.
+Sed vel nibh ut nunc accumsan laoreet sed non massa. ",
+@"Curabitur nulla neque, sodales semper volutpat sit amet, ornare quis elit.
+Donec fringilla nisl id dolor tempor quis ullamcorper enim adipiscing.",
+@"
+
+In vel nisi odio. Phasellus metus nisi, pulvinar ut pellentesque at, porta quis quam.
+Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+",
+@"Nulla aliquam lacus quis lectus ullamcorper non ornare nisi tincidunt.
+Donec venenatis pharetra enim eu sodales. Nulla tempor vestibulum lorem, sed sagittis purus tristique in. Vestibulum in nibh quis nunc ullamcorper tempus vel in turpis.
+
+",
+@"Fusce laoreet pulvinar felis at ornare.
+Cras et tortor ipsum, a fermentum sapien. Nam congue massa at quam sollicitudin tincidunt.
+Donec ut bibendum urna. Praesent vel nisl purus.
+",
+@"Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aenean nibh massa, venenatis ac consectetur non, mollis vel ante. Sed imperdiet mauris nunc, sit amet volutpat magna."};
+            Drawbox(4, 1, 72, 12);
+            var v1 = new SubView(5, 2, 70, 10);
+            Drawbox(9, 14, 42, 12);
+            var v2 = new SubView(10, 15, 40, 10);
+            while(true) {
+                foreach(var t in text) {
+                    v1.Write(t);
+                    v2.Write(t);
+                    Console.ReadKey();
+                }
+            }
         }
 
         private static void BlitDemo() {
@@ -41,12 +76,25 @@ namespace Droog.MonkeySpace2013.Mud {
             //Console.ReadKey();
             Console.CursorVisible = false;
             while(true) {
-                var top = r.Next(Console.WindowHeight - h - 1);
-                var left = r.Next(Console.WindowWidth - w - 1);
+                var top = r.Next(Console.WindowHeight - h - 4) + 2;
+                var left = r.Next(Console.WindowWidth - w - 4) + 2;
                 Blit(buffer, left, top);
                 //Thread.Sleep(1000);
             }
 
+        }
+
+        private static void Drawbox(int left, int top, int width, int height) {
+            Console.SetCursorPosition(left, top);
+            Console.Write("+" + Enumerable.Repeat("-", width - 2).Aggregate((x, y) => x + y) + "+");
+            top++;
+            Console.SetCursorPosition(left, top);
+            for(var i = 0; i < height - 2; i++) {
+                Console.Write("|" + Enumerable.Repeat(" ", width - 2).Aggregate((x, y) => x + y) + "|");
+                top++;
+                Console.SetCursorPosition(left, top);
+            }
+            Console.Write("+" + Enumerable.Repeat("-", width - 2).Aggregate((x, y) => x + y) + "+");
         }
 
         private static void Blit(string[] buffer, int left, int top) {
@@ -54,26 +102,26 @@ namespace Droog.MonkeySpace2013.Mud {
                 Console.SetCursorPosition(left, top);
                 Console.Write(line);
                 top++;
-                Console.SetCursorPosition(0,0);
+                Console.SetCursorPosition(0, 0);
             }
         }
 
-        private string[] _commandList = Enum.GetValues(typeof(Cmd)).Cast<Cmd>().Select(x => x.ToString()).ToArray();
-        private string[] _directions = Enum.GetValues(typeof(Direction)).Cast<Direction>().Select(x => x.ToString().ToLower()).ToArray();
-        private TheHouse theHouse;
-        private Player player;
+        private readonly string[] _commandList = Enum.GetValues(typeof(Cmd)).Cast<Cmd>().Select(x => x.ToString()).ToArray();
+        private readonly string[] _directions = Enum.GetValues(typeof(Direction)).Cast<Direction>().Select(x => x.ToString().ToLower()).ToArray();
+        private readonly TheHouse theHouse;
+        private readonly Player player;
 
         public Dungeon() {
-
             theHouse = new TheHouse();
             player = theHouse.AddPlayer();
         }
 
         public void Run() {
-            Console.SetCursorPosition(0, Console.WindowHeight);
-            var window = new ConsoleWindow();
-            var le = new LineEditor(window, "dungeon") { TabAtStartCompletes = true, AutoCompleteEvent = AutoComplete };
-            Console.WriteLine(player.Look());
+            Drawbox(5, 10, 62, 12);
+            var view = new SubView(6, 11, 60, 10);
+            //var view = new ConsoleView();
+            var le = new LineEditor(view, "dungeon") { TabAtStartCompletes = true, AutoCompleteEvent = AutoComplete };
+            view.WriteLine(player.Look());
             string line = "";
             while((line = le.Edit(GetPrompt(), "")) != null) {
                 var parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -86,7 +134,7 @@ namespace Droog.MonkeySpace2013.Mud {
                     case Cmd.quit:
                         return;
                     case Cmd.look:
-                        Console.WriteLine(player.Look());
+                        view.WriteLine(player.Look());
                         break;
                     case Cmd.go:
                         if(parts.Length == 0) {
@@ -94,21 +142,18 @@ namespace Droog.MonkeySpace2013.Mud {
                         }
                         Direction direction;
                         Enum.TryParse(parts[1], true, out direction);
-                        Console.WriteLine(player.Go(direction));
+                        view.WriteLine(player.Go(direction));
                         break;
                     case Cmd.say:
                         var said = line.Substring(line.IndexOf(" ")).Trim();
                         player.Say(said);
-                        break;
-                    case Cmd.info:
-                        Console.WriteLine("[{0},{1}],[{2},{3}]", Console.WindowWidth, Console.WindowHeight, Console.CursorLeft, Console.CursorTop);
                         break;
                     default:
                         continue;
                     }
                 }
                 foreach(var heard in player.Listen()) {
-                    Console.WriteLine(heard);
+                    view.WriteLine(heard);
                 }
             }
         }

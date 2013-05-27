@@ -43,17 +43,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConsoleWindow.cs" />
+    <Compile Include="ConsoleView.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Connector.cs" />
     <Compile Include="Dungeon.cs" />
     <Compile Include="getline.cs" />
-    <Compile Include="IWindow.cs" />
+    <Compile Include="IView.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Room.cs" />
     <Compile Include="Space.cs" />
+    <Compile Include="SubView.cs" />
     <Compile Include="TheHouse.cs" />
     <Compile Include="TheVoid.cs" />
   </ItemGroup>
