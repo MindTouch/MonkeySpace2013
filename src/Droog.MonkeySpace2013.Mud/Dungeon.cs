@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Droog.MonkeySpace2013.Mud {
     public class Dungeon {
@@ -43,9 +44,9 @@ Donec ut bibendum urna. Praesent vel nisl purus.
 ",
 @"Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aenean nibh massa, venenatis ac consectetur non, mollis vel ante. Sed imperdiet mauris nunc, sit amet volutpat magna."};
             Drawbox(4, 1, 72, 12);
-            var v1 = new SubView(5, 2, 70, 10);
+            var v1 = new View(5, 2, 70, 10);
             Drawbox(9, 14, 42, 12);
-            var v2 = new SubView(10, 15, 40, 10);
+            var v2 = new View(10, 15, 40, 10);
             while(true) {
                 foreach(var t in text) {
                     v1.Write(t);
@@ -117,8 +118,10 @@ Donec ut bibendum urna. Praesent vel nisl purus.
         }
 
         public void Run() {
-            Drawbox(5, 10, 62, 12);
-            var view = new SubView(6, 11, 60, 10);
+            var topHalf = Console.WindowHeight / 2;
+            var bottomHalf = Console.WindowHeight - topHalf;
+            var debug = new FramedView(0, 0, Console.WindowWidth, topHalf);
+            var view = new FramedView(0, topHalf, Console.WindowWidth, bottomHalf, debug);
             //var view = new ConsoleView();
             var le = new LineEditor(view, "dungeon") { TabAtStartCompletes = true, AutoCompleteEvent = AutoComplete };
             view.WriteLine(player.Look());
@@ -129,28 +132,34 @@ Donec ut bibendum urna. Praesent vel nisl purus.
                     continue;
                 }
                 Cmd cmd;
+                var handled = false;
                 if(Enum.TryParse(parts[0], true, out cmd)) {
                     switch(cmd) {
                     case Cmd.quit:
                         return;
                     case Cmd.look:
                         view.WriteLine(player.Look());
+                        handled = true;
                         break;
                     case Cmd.go:
-                        if(parts.Length == 0) {
-                            continue;
+                        if(parts.Length < 2) {
+                            break;
                         }
                         Direction direction;
                         Enum.TryParse(parts[1], true, out direction);
                         view.WriteLine(player.Go(direction));
+                        handled = true;
                         break;
                     case Cmd.say:
                         var said = line.Substring(line.IndexOf(" ")).Trim();
                         player.Say(said);
+                        handled = true;
                         break;
-                    default:
-                        continue;
                     }
+                }
+                if(!handled) {
+                    view.WriteLine("Unknown command: {0}", line);
+                    view.WriteLine();
                 }
                 foreach(var heard in player.Listen()) {
                     view.WriteLine(heard);

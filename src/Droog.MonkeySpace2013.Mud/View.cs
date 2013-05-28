@@ -3,21 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Droog.MonkeySpace2013.Mud {
-    public class SubView : IView {
+    public class View : IView, ILog {
         private readonly int _top;
         private readonly int _left;
         private readonly int _width;
         private readonly int _height;
+        private readonly ILog _logger;
         private int _cursorTop;
         private int _cursorLeft;
         private int _bufferTop;
         private List<char[]> _buffer;
 
-        public SubView(int left, int top, int width, int height) {
+        public View(int left, int top, int width, int height, ILog logger = null) {
             _top = top;
             _left = left;
             _width = width;
             _height = height;
+            _logger = logger ?? NullLog.Instance;
             InitBuffer();
         }
 
@@ -35,13 +37,16 @@ namespace Droog.MonkeySpace2013.Mud {
         }
 
         private void Blit() {
-            var top = _top;
-            foreach(var line in _buffer.Skip(_bufferTop).Take(_height)) {
-                Console.SetCursorPosition(_left, top);
-                Console.Write(line);
-                top++;
+            lock(Console.Out) {
+                var top = _top;
+                foreach(var line in _buffer.Skip(_bufferTop).Take(_height)) {
+                    Console.SetCursorPosition(_left, top);
+                    Console.Write(line);
+                    top++;
+                }
+                Console.SetCursorPosition(_left + _cursorLeft, _top + _cursorTop);
             }
-            Console.SetCursorPosition(_left + _cursorLeft, _top + _cursorTop);
+            _logger.Debug("Blit: [{0},{1}]", _cursorLeft, _cursorTop);
         }
 
         public void WriteLine(string format, params object[] args) {
@@ -87,7 +92,7 @@ namespace Droog.MonkeySpace2013.Mud {
         }
 
         public void WriteLine() {
-            _cursorTop++;
+            SetText("\r\n");
         }
 
         public event ConsoleCancelEventHandler CancelKeyPress {
@@ -97,7 +102,8 @@ namespace Droog.MonkeySpace2013.Mud {
 
         public void SetCursorPosition(int left, int top) {
             _cursorLeft = left;
-            _cursorLeft = top;
+            _cursorTop = top;
+            _logger.Debug("Set: [{0},{1}]", _cursorLeft, _cursorTop);
         }
 
         public ConsoleKeyInfo ReadKey(bool intercept) {
@@ -128,6 +134,14 @@ namespace Droog.MonkeySpace2013.Mud {
 
         public int CursorTop {
             get { return _cursorTop; }
+        }
+
+        void ILog.Debug(string format, params object[] args) {
+            WriteLine("DEBUG: " + format, args);
+        }
+
+        void ILog.Error(string format, params object[] args) {
+            WriteLine("ERROR: " + format, args);
         }
     }
 }
