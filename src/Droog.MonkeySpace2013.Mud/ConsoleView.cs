@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Droog.MonkeySpace2013.Mud {
     public class ConsoleView : IView {
+        public void Invalidate() {
+            throw new NotImplementedException();
+        }
+
         public void Focus() {
         }
 
@@ -29,8 +34,8 @@ namespace Droog.MonkeySpace2013.Mud {
             Console.SetCursorPosition(left, top);
         }
 
-        public ConsoleKeyInfo ReadKey(bool intercept) {
-            return Console.ReadKey(intercept);
+        public ConsoleKeyInfo ReadKey() {
+            return Console.ReadKey(true);
         }
 
         public void Clear() {
@@ -45,9 +50,17 @@ namespace Droog.MonkeySpace2013.Mud {
             Console.Write(value);
         }
 
-        public int WindowWidth {
+        public int Width {
             get { return Console.WindowWidth; }
             set { Console.WindowHeight = value; }
+        }
+
+        public int Height {
+            get { throw new NotImplementedException(); }
+        }
+
+        public IEnumerable<char[]> VisibileBuffer {
+            get { throw new NotImplementedException(); }
         }
 
         public int BufferHeight {

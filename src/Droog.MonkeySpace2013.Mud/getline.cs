@@ -180,7 +180,7 @@ namespace Droog.MonkeySpace2013.Mud {
 				//Handler.Control ('T', CmdDebug),
 
 				// quote
-				Handler.Control ('Q', () => HandleChar(window.ReadKey(true).KeyChar))
+				Handler.Control ('Q', () => HandleChar(window.ReadKey().KeyChar))
 			};
 
             rendered_text = new StringBuilder();
@@ -216,7 +216,7 @@ namespace Droog.MonkeySpace2013.Mud {
         }
 
         void UpdateHomeRow(int screenpos) {
-            int lines = 1 + (screenpos / window.WindowWidth);
+            int lines = 1 + (screenpos / window.Width);
 
             home_row = window.CursorTop - (lines - 1);
             if(home_row < 0)
@@ -288,7 +288,7 @@ namespace Droog.MonkeySpace2013.Mud {
 
         int LineCount {
             get {
-                return (shown_prompt.Length + rendered_text.Length) / window.WindowWidth;
+                return (shown_prompt.Length + rendered_text.Length) / window.Width;
             }
         }
 
@@ -296,11 +296,11 @@ namespace Droog.MonkeySpace2013.Mud {
             cursor = newpos;
 
             int actual_pos = shown_prompt.Length + TextToRenderPos(cursor);
-            int row = home_row + (actual_pos / window.WindowWidth);
-            int col = actual_pos % window.WindowWidth;
+            int row = home_row + (actual_pos / window.Width);
+            int col = actual_pos % window.Width;
 
-            if(row >= window.BufferHeight)
-                row = window.BufferHeight - 1;
+            //if(row >= window.BufferHeight)
+            //    row = window.BufferHeight - 1;
             window.SetCursorPosition(col, row);
 
             //log.WriteLine ("Going to cursor={0} row={1} col={2} actual={3} prompt={4} ttr={5} old={6}", newpos, row, col, actual_pos, prompt.Length, TextToRenderPos (cursor), cursor);
@@ -718,9 +718,9 @@ namespace Droog.MonkeySpace2013.Mud {
             while(!done) {
                 ConsoleModifiers mod;
 
-                cki = window.ReadKey(true);
+                cki = window.ReadKey();
                 if(cki.Key == ConsoleKey.Escape) {
-                    cki = window.ReadKey(true);
+                    cki = window.ReadKey();
 
                     mod = ConsoleModifiers.Alt;
                 } else

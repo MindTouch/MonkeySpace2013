@@ -35,7 +35,6 @@ namespace Droog.MonkeySpace2013.Mud {
             } else {
                 builder.AppendLine("You are alone.");
             }
-            builder.AppendLine();
             return builder.ToString();
         }
 

@@ -3,34 +3,34 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Droog.MonkeySpace2013.Mud {
-    public class View : IView, ILog {
-        private readonly IConsole Console;
+    public class View : IView, IPane, ILog {
+        protected readonly IViewHost _viewHost;
         private readonly int _top;
         private readonly int _left;
         private readonly int _width;
         private readonly int _height;
-        private readonly ILog _logger;
+        protected readonly ILog _logger;
         private int _cursorTop;
         private int _cursorLeft;
         private int _bufferTop;
         private List<char[]> _buffer;
 
-        public View(IConsole console, int left, int top, int width, int height, ILog logger = null) {
-            Console = console;
+        public View(IViewHost viewHost, int left, int top, int width, int height, ILog logger = null) {
+            _viewHost = viewHost;
             _top = top;
             _left = left;
             _width = width;
             _height = height;
             _logger = logger ?? NullLog.Instance;
             InitBuffer();
+            viewHost.AddView(this);
         }
 
         private void InitBuffer() {
             _buffer = new List<char[]>();
-            for(int i = 0; i < _height; i++) {
+            for(var i = 0; i < _height; i++) {
                 AddBufferLine();
             }
-            Blit();
         }
 
         private void AddBufferLine() {
@@ -38,20 +38,20 @@ namespace Droog.MonkeySpace2013.Mud {
             _buffer.Add(line);
         }
 
-        private void Blit() {
-                Console.Blit(this, _buffer.Skip(_bufferTop).Take(_height));
-            _logger.Debug("Blit: [{0},{1}]", _cursorLeft, _cursorTop);
+        public void Invalidate() {
+            _viewHost.Draw(this);
+            _logger.Debug("Draw: [{0},{1}]", _cursorLeft, _cursorTop);
         }
 
         public void Focus() {
-            Console.Focus(this);
+            _viewHost.Focus(this);
         }
 
         public void Blur() {
-            Console.Blur(this);
+            _viewHost.Blur(this);
         }
 
-        public bool HasFocus { get { return Console.Focused == this; } }
+        public bool HasFocus { get { return _viewHost.Focused == this; } }
 
         public void WriteLine(string format, params object[] args) {
             SetText(string.Format(format + "\r\n", args));
@@ -92,7 +92,7 @@ namespace Droog.MonkeySpace2013.Mud {
                 Array.Copy(line, line.Length - over, rest, 0, over);
                 line = rest;
             }
-            Blit();
+            Invalidate();
         }
 
         public void WriteLine() {
@@ -100,8 +100,8 @@ namespace Droog.MonkeySpace2013.Mud {
         }
 
         public event ConsoleCancelEventHandler CancelKeyPress {
-            add { Console.CancelKeyPress += value; }
-            remove { Console.CancelKeyPress -= value; }
+            add { _viewHost.CancelKeyPress += value; }
+            remove { _viewHost.CancelKeyPress -= value; }
         }
 
         public void SetCursorPosition(int left, int top) {
@@ -110,14 +110,15 @@ namespace Droog.MonkeySpace2013.Mud {
             _logger.Debug("Set: [{0},{1}]", _cursorLeft, _cursorTop);
         }
 
-        public ConsoleKeyInfo ReadKey(bool intercept) {
-            return Console.ReadKey(intercept);
+        public ConsoleKeyInfo ReadKey() {
+            return _viewHost.ReadKey();
         }
 
         public void Clear() {
             InitBuffer();
             _cursorLeft = 0;
             _cursorTop = 0;
+            Invalidate();
         }
 
         public void Write(string format, params object[] args) {
@@ -128,21 +129,16 @@ namespace Droog.MonkeySpace2013.Mud {
             SetText(value.ToString());
         }
 
-        public int WindowWidth {
-            get { return _width; }
-        }
+        public virtual int Top { get { return _top; } }
+        public virtual int Left { get { return _left; } }
+        public virtual int Width { get { return _width; } }
+        public virtual int Height { get { return _height; } }
+        public virtual int CursorTop { get { return _cursorTop; } }
+        public virtual int CursorLeft { get { return _cursorLeft; } }
 
-        public int BufferHeight {
-            get { return _height; }
+        public virtual IEnumerable<char[]> VisibileBuffer {
+            get { return _buffer.Skip(_bufferTop).Take(_height); }
         }
-
-        public int CursorTop {
-            get { return _cursorTop; }
-        }
-
-        public int Top { get { return _top; } }
-        public int Left { get { return _left; } }
-        public int CursorLeft { get { return _cursorLeft; } }
 
         void ILog.Debug(string format, params object[] args) {
             WriteLine("DEBUG: " + format, args);

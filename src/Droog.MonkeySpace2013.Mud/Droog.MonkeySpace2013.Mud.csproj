@@ -44,12 +44,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleView.cs" />
+    <Compile Include="ConsoleViewHost.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Connector.cs" />
     <Compile Include="Dungeon.cs" />
     <Compile Include="FramedView.cs" />
     <Compile Include="getline.cs" />
-    <Compile Include="IConsole.cs" />
+    <Compile Include="IViewHost.cs" />
     <Compile Include="ILog.cs" />
     <Compile Include="IView.cs" />
     <Compile Include="Item.cs" />
