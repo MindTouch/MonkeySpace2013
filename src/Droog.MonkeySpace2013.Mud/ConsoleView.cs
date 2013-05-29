@@ -2,6 +2,16 @@
 
 namespace Droog.MonkeySpace2013.Mud {
     public class ConsoleView : IView {
+        public void Focus() {
+        }
+
+        public void Blur() {
+        }
+
+        public bool HasFocus{
+            get { return true; }
+        }
+
         public void WriteLine(string format, params object[] args) {
             Console.WriteLine(format, args);
         }
@@ -47,8 +57,12 @@ namespace Droog.MonkeySpace2013.Mud {
 
         public int CursorTop {
             get { return Console.CursorTop; }
-            set { Console.CursorTop = value; }
         }
 
+        public int Top { get { return 0; } }
+        public int Left { get { return 0; } }
+        public int CursorLeft {
+            get { return Console.CursorLeft; }
+        }
     }
 }

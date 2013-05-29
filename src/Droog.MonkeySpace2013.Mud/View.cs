@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace Droog.MonkeySpace2013.Mud {
     public class View : IView, ILog {
+        private readonly IConsole Console;
         private readonly int _top;
         private readonly int _left;
         private readonly int _width;
@@ -14,7 +15,8 @@ namespace Droog.MonkeySpace2013.Mud {
         private int _bufferTop;
         private List<char[]> _buffer;
 
-        public View(int left, int top, int width, int height, ILog logger = null) {
+        public View(IConsole console, int left, int top, int width, int height, ILog logger = null) {
+            Console = console;
             _top = top;
             _left = left;
             _width = width;
@@ -37,17 +39,19 @@ namespace Droog.MonkeySpace2013.Mud {
         }
 
         private void Blit() {
-            lock(Console.Out) {
-                var top = _top;
-                foreach(var line in _buffer.Skip(_bufferTop).Take(_height)) {
-                    Console.SetCursorPosition(_left, top);
-                    Console.Write(line);
-                    top++;
-                }
-                Console.SetCursorPosition(_left + _cursorLeft, _top + _cursorTop);
-            }
+                Console.Blit(this, _buffer.Skip(_bufferTop).Take(_height));
             _logger.Debug("Blit: [{0},{1}]", _cursorLeft, _cursorTop);
         }
+
+        public void Focus() {
+            Console.Focus(this);
+        }
+
+        public void Blur() {
+            Console.Blur(this);
+        }
+
+        public bool HasFocus { get { return Console.Focused == this; } }
 
         public void WriteLine(string format, params object[] args) {
             SetText(string.Format(format + "\r\n", args));
@@ -135,6 +139,10 @@ namespace Droog.MonkeySpace2013.Mud {
         public int CursorTop {
             get { return _cursorTop; }
         }
+
+        public int Top { get { return _top; } }
+        public int Left { get { return _left; } }
+        public int CursorLeft { get { return _cursorLeft; } }
 
         void ILog.Debug(string format, params object[] args) {
             WriteLine("DEBUG: " + format, args);
