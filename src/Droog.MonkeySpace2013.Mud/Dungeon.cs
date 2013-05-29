@@ -50,7 +50,7 @@ Donec ut bibendum urna. Praesent vel nisl purus.
             }
         }
 
-        private readonly string[] _commandList = new[] { "quit", "go", "look", "say" };
+        private readonly string[] _commandList = new[] { "quit", "go", "look", "say", "debug" };
         private readonly string[] _directions = Enum.GetValues(typeof(Direction)).Cast<Direction>().Select(x => x.ToString().ToLower()).ToArray();
         private readonly TheHouse theHouse;
         private readonly Player player;
@@ -63,9 +63,11 @@ Donec ut bibendum urna. Praesent vel nisl purus.
         public void Run() {
             var host = new ConsoleViewHost();
             var topHalf = Console.WindowHeight / 2;
-            var bottomHalf = Console.WindowHeight - topHalf;
-            var debug = new FramedView(host, 0, 0, Console.WindowWidth, topHalf - 3) { Title = "Debug" };
-            var view = new FramedView(host, 0, topHalf - 3, Console.WindowWidth, bottomHalf, debug);
+            var viewHeight = Console.WindowHeight - topHalf;
+            var viewTop = topHalf - 3;
+            var debug = new FramedView(host, 0, 0, Console.WindowWidth, viewTop) { Title = "Debug" };
+            debug.Hide();
+            var view = new FramedView(host, 0, 0, Console.WindowWidth, Console.WindowHeight - 3, debug);
             var input = new FramedView(host, 0, Console.WindowHeight - 3, Console.WindowWidth, 3, debug) { Title = "Command" };
             input.Focus();
             //var view = new ConsoleView();
@@ -114,6 +116,17 @@ Donec ut bibendum urna. Praesent vel nisl purus.
                 case "say":
                     var said = line.Substring(line.IndexOf(" ")).Trim();
                     player.Say(said);
+                    break;
+                case "debug":
+                    if(debug.IsVisible) {
+                        debug.Hide();
+                        view.Top = 0;
+                        view.Height = Console.WindowHeight - 3;
+                    } else {
+                        debug.Show();
+                        view.Top = viewTop;
+                        view.Height = viewHeight;
+                    }
                     break;
                 default:
                     handled = false;

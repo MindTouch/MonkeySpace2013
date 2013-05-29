@@ -17,7 +17,7 @@ namespace Droog.MonkeySpace2013.Mud {
         }
 
         public void Invalidate() {
-            foreach(var pane in _panes) {
+            foreach(var pane in _panes.Where(x => x.IsVisible)) {
                 pane.Invalidate();
             }
         }
@@ -28,7 +28,7 @@ namespace Droog.MonkeySpace2013.Mud {
             // TODO : deal with views that extend outside the visible console
             var top = pane.Top;
             var left = pane.Left;
-            foreach(var line in pane.VisibileBuffer) {
+            foreach(var line in pane.VisibleBuffer) {
                 Console.SetCursorPosition(left, top);
                 if(top == Console.WindowHeight - 1 && left + line.Length == Console.WindowWidth) {
 

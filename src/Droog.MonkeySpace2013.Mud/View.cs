@@ -5,15 +5,16 @@ using System.Linq;
 namespace Droog.MonkeySpace2013.Mud {
     public class View : IView, IPane, ILog {
         protected readonly IViewHost _viewHost;
-        private readonly int _top;
-        private readonly int _left;
-        private readonly int _width;
-        private readonly int _height;
+        protected int _top;
+        protected int _left;
+        protected int _width;
+        protected int _height;
         protected readonly ILog _logger;
         private int _cursorTop;
         private int _cursorLeft;
         private int _bufferTop;
         private List<char[]> _buffer;
+        private bool _isVisible = true;
 
         public View(IViewHost viewHost, int left, int top, int width, int height, ILog logger = null) {
             _viewHost = viewHost;
@@ -33,12 +34,34 @@ namespace Droog.MonkeySpace2013.Mud {
             }
         }
 
+        protected void EnsureBuffer() {
+            for(var i = 0; i < _buffer.Count; i++) {
+                var line = _buffer[i];
+                if(line.Length != _width) {
+                    _buffer[i] = GetBufferLine();
+                    Array.Copy(line, _buffer[i], Math.Min(line.Length, _width));
+                }
+            }
+            if(_buffer.Count < _height) {
+                var n = _height - _buffer.Count;
+                for(var i = 0; i < n; i++) {
+                    _buffer.Insert(0, GetBufferLine());
+                }
+            }
+        }
+
         private void AddBufferLine() {
-            var line = Enumerable.Repeat(' ', _width).ToArray();
-            _buffer.Add(line);
+            _buffer.Add(GetBufferLine());
+        }
+
+        private char[] GetBufferLine() {
+            return Enumerable.Repeat(' ', _width).ToArray();
         }
 
         public void Invalidate() {
+            if(!_isVisible) {
+                return;
+            }
             _viewHost.Draw(this);
             _logger.Debug("Draw: [{0},{1}]", _cursorLeft, _cursorTop);
         }
@@ -52,6 +75,20 @@ namespace Droog.MonkeySpace2013.Mud {
         }
 
         public bool HasFocus { get { return _viewHost.Focused == this; } }
+
+        public bool IsVisible {
+            get { return _isVisible; }
+        }
+
+        public void Show() {
+            _isVisible = true;
+            Invalidate();
+        }
+
+        public void Hide() {
+            _isVisible = false;
+            _viewHost.Invalidate();
+        }
 
         public void WriteLine(string format, params object[] args) {
             SetText(string.Format(format + "\r\n", args));
@@ -129,14 +166,49 @@ namespace Droog.MonkeySpace2013.Mud {
             SetText(value.ToString());
         }
 
-        public virtual int Top { get { return _top; } }
-        public virtual int Left { get { return _left; } }
-        public virtual int Width { get { return _width; } }
-        public virtual int Height { get { return _height; } }
-        public virtual int CursorTop { get { return _cursorTop; } }
-        public virtual int CursorLeft { get { return _cursorLeft; } }
+        public virtual int Top {
+            get { return _top; }
+            set {
+                _top = value;
+                _viewHost.Invalidate();
+            }
+        }
 
-        public virtual IEnumerable<char[]> VisibileBuffer {
+        public virtual int Left {
+            get { return _left; }
+            set {
+                _left = value;
+                _viewHost.Invalidate();
+            }
+        }
+
+        public virtual int Width {
+            get { return _width; }
+            set {
+                _width = value;
+                EnsureBuffer();
+                _viewHost.Invalidate();
+            }
+        }
+        int IView.Width { get { return _width; } }
+
+        public virtual int Height {
+            get { return _height; }
+            set {
+                _height = value;
+                EnsureBuffer();
+                _viewHost.Invalidate();
+            }
+        }
+        int IView.Height { get { return _height; } }
+
+        public virtual int CursorTop { get { return _cursorTop; } }
+        int IView.CursorTop { get { return _cursorTop; } }
+
+        public virtual int CursorLeft { get { return _cursorLeft; } }
+        int IView.CursorLeft { get { return _cursorLeft; } }
+
+        public virtual IEnumerable<char[]> VisibleBuffer {
             get { return _buffer.Skip(_bufferTop).Take(_height); }
         }
 
