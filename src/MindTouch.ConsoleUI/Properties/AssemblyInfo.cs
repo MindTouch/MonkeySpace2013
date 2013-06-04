@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Droog.MonkeySpace2013.Server")]
+[assembly: AssemblyTitle("Droog.ConsoleUI")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Droog.MonkeySpace2013.Server")]
+[assembly: AssemblyProduct("Droog.ConsoleUI")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("bdc9dd24-74f3-4145-9da9-f50dc90104db")]
+[assembly: Guid("43db1d80-a0c1-4fb6-a74e-3d7eb29027f4")]
 
 // Version information for an assembly consists of the following four values:
 //

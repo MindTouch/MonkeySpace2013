@@ -1,31 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Droog.MonkeySpace2013.Mud {
-
-    public enum Direction {
-        North,
-        South,
-        East,
-        West,
-        Up,
-        Down
-    }
-    public class Player : Entity {
+namespace MindTouch.MonkeySpace2013.Mud {
+    public class Player : Entity, IPlayer {
         public List<Item> Inventory = new List<Item>();
         public Room Location;
         public TheHouse TheHouse;
         public Queue<Speech> Heard = new Queue<Speech>();
 
-        public void ChangeName(string name) {
-            TheHouse.Players[name] = this;
-            TheHouse.Players.Remove(Name);
-            Name = name;
-        }
-
         public IEnumerable<string> Listen() {
             while(Heard.Any()) {
                 var speech = Heard.Dequeue();
+                if(speech.Where == null) {
+                    yield return string.Format("{0} {1}", speech.Who == this ? "You" : speech.Who.Name, speech.What);
+                    continue;
+                }
                 if(speech.Where != Location) {
                     continue;
                 }
@@ -52,20 +41,16 @@ namespace Droog.MonkeySpace2013.Mud {
             }
         }
 
-        private void Tell(Room location, Player player, string said) {
+        public string GetLocation() {
+            return Location.Name;
+        }
+
+        public void Tell(Room location, Player player, string said) {
             Heard.Enqueue(new Speech(location, player, said));
         }
-    }
 
-    public class Speech {
-        public Room Where;
-        public Player Who;
-        public string What;
-
-        public Speech(Room where, Player who, string what) {
-            Where = where;
-            Who = who;
-            What = what;
+        public void Dispose() {
+            TheHouse.Leave(this);
         }
     }
 }

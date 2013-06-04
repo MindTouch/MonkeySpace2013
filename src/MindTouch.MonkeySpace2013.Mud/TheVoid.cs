@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Droog.MonkeySpace2013.Mud {
+namespace MindTouch.MonkeySpace2013.Mud {
     public class TheVoid : Room {
         public Room Exit;
         public override string Look(Player who) {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Droog.MonkeySpace2013.Mud {
+namespace MindTouch.ConsoleUI {
     public class View : IView, IPane, ILog {
         protected readonly IViewHost _viewHost;
         protected int _top;
@@ -63,7 +63,6 @@ namespace Droog.MonkeySpace2013.Mud {
                 return;
             }
             _viewHost.Draw(this);
-            _logger.Debug("Draw: [{0},{1}]", _cursorLeft, _cursorTop);
         }
 
         public void Focus() {
@@ -144,7 +143,6 @@ namespace Droog.MonkeySpace2013.Mud {
         public void SetCursorPosition(int left, int top) {
             _cursorLeft = left;
             _cursorTop = top;
-            _logger.Debug("Set: [{0},{1}]", _cursorLeft, _cursorTop);
         }
 
         public ConsoleKeyInfo ReadKey() {

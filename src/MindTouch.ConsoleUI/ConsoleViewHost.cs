@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Droog.MonkeySpace2013.Mud {
-    class ConsoleViewHost : IViewHost {
+namespace MindTouch.ConsoleUI {
+    public class ConsoleViewHost : IViewHost {
         private readonly List<IPane> _panes = new List<IPane>();
 
         public void AddView(IPane view) {

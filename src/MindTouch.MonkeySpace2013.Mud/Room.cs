@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Droog.MonkeySpace2013.Mud {
+namespace MindTouch.MonkeySpace2013.Mud {
     public class Room : Space {
         public List<Item> Items = new List<Item>();
         public List<Player> Players = new List<Player>();
@@ -31,7 +30,11 @@ namespace Droog.MonkeySpace2013.Mud {
             }
             var others = Players.Where(x => x != who);
             if(others.Any()) {
-                builder.AppendLine(string.Join(", ", others.Select(x => x.Name)) + " are here.");
+                if(others.Count() == 1) {
+                    builder.AppendLine(others.First().Name + " is here.");
+                } else {
+                    builder.AppendLine(string.Join(", ", others.Select(x => x.Name)) + " are here.");
+                }
             } else {
                 builder.AppendLine("You are alone.");
             }
@@ -63,10 +66,20 @@ namespace Droog.MonkeySpace2013.Mud {
 
         public virtual void Enter(Player player) {
             if(player.Location != null) {
-                player.Location.Players.Remove(player);
+                player.Location.Leave(player);
+            }
+            foreach(var p in Players) {
+                p.Tell(null, player, "arrived.");
             }
             Players.Add(player);
             player.Location = this;
+        }
+
+        public void Leave(Player player) {
+            Players.Remove(player);
+            foreach(var p in Players) {
+                p.Tell(null, player, "left.");
+            }
         }
     }
 }

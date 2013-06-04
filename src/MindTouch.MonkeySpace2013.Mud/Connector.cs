@@ -1,4 +1,4 @@
-﻿namespace Droog.MonkeySpace2013.Mud {
+﻿namespace MindTouch.MonkeySpace2013.Mud {
     public class Connector : Space {
         public Room From;
         public Room To;

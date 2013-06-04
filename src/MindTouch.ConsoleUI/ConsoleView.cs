@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Droog.MonkeySpace2013.Mud {
+namespace MindTouch.ConsoleUI {
     public class ConsoleView : IView {
         public void Invalidate() {
             throw new NotImplementedException();

@@ -29,7 +29,7 @@ using System.Text;
 using System.IO;
 using System.Threading;
 
-namespace Droog.MonkeySpace2013.Mud {
+namespace MindTouch.ConsoleUI {
 
     public class LineEditor {
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Droog.MonkeySpace2013.Mud {
+namespace MindTouch.ConsoleUI {
     public class FramedView : View {
         private int _left;
         private int _top;

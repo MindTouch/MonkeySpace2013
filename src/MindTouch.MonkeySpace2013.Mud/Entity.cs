@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace Droog.MonkeySpace2013.Mud {
+namespace MindTouch.MonkeySpace2013.Mud {
 
     public class Entity {
         public string Name;

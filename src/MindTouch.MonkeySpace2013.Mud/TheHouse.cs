@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Droog.MonkeySpace2013.Mud {
+namespace MindTouch.MonkeySpace2013.Mud {
     public class TheHouse {
 
         private int num = 0;
@@ -33,9 +33,11 @@ namespace Droog.MonkeySpace2013.Mud {
             Livingroom[Direction.Up] = stairsup;
             stairsup.From = Livingroom;
             stairsup.To = Hallway;
+            Hallway[Direction.Down] = stairsup;
             Livingroom[Direction.Down] = stairsdown;
             stairsdown.From = Livingroom;
             stairsdown.To = Basement;
+            Basement[Direction.Up] = stairsdown;
             Livingroom[Direction.North] = Coatcloset;
             Coatcloset[Direction.South] = Livingroom;
             Livingroom[Direction.East] = Kitchen;
@@ -46,12 +48,30 @@ namespace Droog.MonkeySpace2013.Mud {
             Kitchen[Direction.South] = Den;
         }
 
-        public Player AddPlayer() {
-            num++;
-            var player = new Player() { Name = "Player" + num, TheHouse = this };
+        public Player Join(string name = null) {
+            name = string.IsNullOrEmpty(name) ? "Player" : name;
+            var playerName = name;
+            while(Players.ContainsKey(playerName)) {
+                num++;
+                playerName = name + num;
+            }
+            var player = new Player { Name = playerName, TheHouse = this };
+            foreach(var p in Players.Values) {
+                p.Tell(null, player, "has joined the game");
+            }
             Coatcloset.Enter(player);
             Players[player.Name] = player;
             return player;
+        }
+
+        public void Leave(Player player) {
+            Players.Remove(player.Name);
+            if(player.Location != null) {
+                player.Location.Leave(player);
+            }
+            foreach(var p in Players.Values) {
+                p.Tell(null, player, "has left the game");
+            }
         }
     }
 }

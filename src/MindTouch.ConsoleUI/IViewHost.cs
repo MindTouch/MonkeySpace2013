@@ -1,7 +1,6 @@
 using System;
-using System.Collections.Generic;
 
-namespace Droog.MonkeySpace2013.Mud {
+namespace MindTouch.ConsoleUI {
     public interface IViewHost {
         void Draw(IPane pane);
         void Focus(IPane view);

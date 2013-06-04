@@ -8,7 +8,7 @@
     <ProjectGuid>{619803A0-F5D2-43A6-9543-682077D57B72}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Droog.MonkeySpace2013.Mud</RootNamespace>
+    <RootNamespace>MindTouch.MonkeySpace2013.Mud</RootNamespace>
     <AssemblyName>dungeon</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -31,7 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Droog.MonkeySpace2013.Mud.Dungeon</StartupObject>
+    <StartupObject>MindTouch.MonkeySpace2013.Mud.LocalRunner</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -43,25 +43,39 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConsoleView.cs" />
-    <Compile Include="ConsoleViewHost.cs" />
+    <Compile Include="RemoteRunner.cs" />
+    <Compile Include="LocalRunner.cs" />
+    <Compile Include="DungeonRemoteClient.cs" />
+    <Compile Include="Direction.cs" />
+    <Compile Include="DungeonClient.cs" />
+    <Compile Include="DungeonServer.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Connector.cs" />
-    <Compile Include="Dungeon.cs" />
-    <Compile Include="FramedView.cs" />
-    <Compile Include="getline.cs" />
-    <Compile Include="IViewHost.cs" />
-    <Compile Include="ILog.cs" />
-    <Compile Include="IView.cs" />
+    <Compile Include="TestRunner.cs" />
+    <Compile Include="IPlayer.cs" />
     <Compile Include="Item.cs" />
-    <Compile Include="NullLog.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RemotePlayer.cs" />
     <Compile Include="Room.cs" />
     <Compile Include="Space.cs" />
-    <Compile Include="View.cs" />
+    <Compile Include="Speech.cs" />
     <Compile Include="TheHouse.cs" />
     <Compile Include="TheVoid.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\MindTouch.Clacks\src\MindTouch.Clacks.Client\MindTouch.Clacks.Client.csproj">
+      <Project>{8D5353C8-E5C9-4DC2-BB15-DC4CC52B17AB}</Project>
+      <Name>MindTouch.Clacks.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MindTouch.Clacks\src\MindTouch.Clacks.Server\MindTouch.Clacks.Server.csproj">
+      <Project>{07E3829C-6A07-462C-8A1C-9FC5F227AAA5}</Project>
+      <Name>MindTouch.Clacks.Server</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MindTouch.ConsoleUI\MindTouch.ConsoleUI.csproj">
+      <Project>{59E2863E-5A16-4E84-B8CF-25D9BFD6CE00}</Project>
+      <Name>MindTouch.ConsoleUI</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

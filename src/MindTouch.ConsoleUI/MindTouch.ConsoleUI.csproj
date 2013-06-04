@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{98AB9029-8963-4B05-B9F1-842DE9C404AA}</ProjectGuid>
+    <ProjectGuid>{59E2863E-5A16-4E84-B8CF-25D9BFD6CE00}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Droog.MonkeySpace2013.Server</RootNamespace>
-    <AssemblyName>Droog.MonkeySpace2013.Server</AssemblyName>
+    <RootNamespace>MindTouch.ConsoleUI</RootNamespace>
+    <AssemblyName>MindTouch.ConsoleUI</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,8 +40,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ServerProggy.cs" />
+    <Compile Include="ConsoleView.cs" />
+    <Compile Include="ConsoleViewHost.cs" />
+    <Compile Include="FramedView.cs" />
+    <Compile Include="getline.cs" />
+    <Compile Include="ILog.cs" />
+    <Compile Include="IPane.cs" />
+    <Compile Include="IView.cs" />
+    <Compile Include="IViewHost.cs" />
+    <Compile Include="NullLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="View.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
