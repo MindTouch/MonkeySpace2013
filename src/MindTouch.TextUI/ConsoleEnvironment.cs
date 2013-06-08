@@ -7,29 +7,44 @@ namespace MindTouch.TextUI {
         private int _cursorLeft;
         private int _cursorTop;
         private IPanel _cursorPanel;
+        private readonly Canvas _canvas;
 
+        public ConsoleEnvironment() {
+            _canvas = new Canvas(Width, Height);
+        }
         protected override void Update() {
             lock(_syncroot) {
                 Console.CursorVisible = false;
-                var buffer = BuildCanvas();
-                for(var row = 0; row < buffer.Length - 1; row++) {
-                    Console.SetCursorPosition(0, row);
-                    Console.Write(buffer[row]);
+                if(_canvas.Width != Width || _canvas.Height != Height) {
+                    _canvas.Resize(Width,Height);
                 }
-                // this is the last console line and it goes all the way to the left edge. Time for
-                // some hackery to avoid the cursor pushing the buffer up by a line
-                var last = Height - 1;
-                var line = buffer[last];
-                Console.SetCursorPosition(0, last);
-                Console.Write(line.Last());
-                Console.MoveBufferArea(0, 0, 1, 1, Console.WindowWidth - 1, last);
-                Console.SetCursorPosition(0, last);
-                Console.Write(line.Take(line.Length - 1).ToArray());
+                foreach(var panel in _panels) {
+                    panel.Paint(_canvas,0,0,Width,Height);
+                }
+                for(var row = 0; row < Height; row++) {
+                    var line = _canvas.GetLine(row);
+                    if(!line.Changed) {
+                        continue;
+                    }
+                    Console.SetCursorPosition(line.Left, row);
+                    if(row == Height - 1 && (line.Left + line.Width) == Width) {
+                        
+                        // this is the last console line and it goes all the way to the left edge. Time for
+                        // some hackery to avoid the cursor pushing the buffer up by a line
+                        var data = line.GetData();
+                        Console.Write(data.Last());
+                        Console.MoveBufferArea(line.Left, row, 1, 1, Console.WindowWidth - 1, last);
+                        Console.SetCursorPosition(0, last);
+                        Console.Write(line.Take(line.Length - 1).ToArray());
+
+                    } else {
+                        
+                    Console.Write(line.GetData());
+                    }
+                }
                 ShowCursor();
             }
         }
-
-        public override event EventHandler DimensionsChanged;
 
         protected override int GetWidth() {
             return Console.WindowWidth;

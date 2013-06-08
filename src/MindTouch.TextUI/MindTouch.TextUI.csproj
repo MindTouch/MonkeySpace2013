@@ -40,12 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Canvas.cs" />
     <Compile Include="ConsoleEnvironment.cs" />
+    <Compile Include="FramedPanel.cs" />
     <Compile Include="Host.cs" />
     <Compile Include="IEnvironment.cs" />
     <Compile Include="IHost.cs" />
     <Compile Include="IPanel.cs" />
     <Compile Include="IPanelHost.cs" />
+    <Compile Include="Line.cs" />
     <Compile Include="Panel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

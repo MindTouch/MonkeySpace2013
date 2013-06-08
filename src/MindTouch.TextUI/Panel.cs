@@ -2,16 +2,25 @@
 
 namespace MindTouch.TextUI {
     public class Panel : Host, IPanelHost {
+
+        private bool _hasFocus;
+        private bool _isVisible = true;
+
+        public int Top { get; private set; }
+
+        public int Left { get; private set; }
+        public new int Width { get; private set; }
+        public new int Height { get; private set; }
+        public bool HasFocus { get { return _hasFocus && (Parent == null || Parent.HasFocus); } }
+        public bool IsVisible { get { return _isVisible && (Parent == null || Parent.IsVisible); } }
+        public IPanelHost Parent { get; set; }
+        public IEnvironment Environment { get; set; }
+        public virtual int InnerWidth { get { return _width; } }
+        public virtual int InnerHeight { get { return _height; } }
+
         protected override void Update() {
-            throw new NotImplementedException();
+            OnPanelChanged();
         }
-
-        public override event EventHandler DimensionsChanged;
-
-        public int Top { get; set; }
-        public int Left { get; set; }
-        public new int Width { get; set; }
-        public new int Height { get; set; }
 
         protected override int GetWidth() {
             return Width;
@@ -21,36 +30,43 @@ namespace MindTouch.TextUI {
             return Height;
         }
 
-        public bool HasFocus { get; private set; }
-        public bool IsVisible { get; private set; }
-        public IPanelHost Parent { get; set; }
-        public IEnvironment Environment { get; set; }
         public void Focus() {
-            throw new NotImplementedException();
+            _hasFocus = true;
+            Update();
         }
 
         public void Blur() {
-            throw new NotImplementedException();
+            _hasFocus = false;
+            Update();
         }
 
         public void Show() {
-            throw new NotImplementedException();
+            _isVisible = true;
+            Update();
         }
 
         public void Hide() {
-            throw new NotImplementedException();
+            _isVisible = false;
+            Update();
         }
 
         public void Invalidate() {
-            throw new NotImplementedException();
+            Update();
         }
 
-        public char[][] GetCanvas() {
-            throw new NotImplementedException();
+        public Canvas GetCanvas(int left, int top, int width, int height) {
+            if(IsVisible && Left < left+width && Left+Width > left && Top < top+height && Top+Height > top) {
+                return BuildCanvas(left, top, Width, Height);
+            }
+            return Canvas.Empty;
         }
 
         public event EventHandler PanelChanged;
-        public int InnerWidth { get; private set; }
-        public int InnerHeight { get; private set; }
+
+        protected void OnPanelChanged() {
+            if(PanelChanged != null) {
+                PanelChanged(this, EventArgs.Empty);
+            }
+        }
     }
 }

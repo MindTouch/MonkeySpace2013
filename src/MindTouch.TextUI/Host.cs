@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MindTouch.TextUI {
     public abstract class Host : IHost {
@@ -8,12 +9,11 @@ namespace MindTouch.TextUI {
         protected readonly List<IPanel> _panels = new List<IPanel>();
         private bool invalidating = false;
 
-        public int Width { get { return GetWidth(); } }
-        public int Height { get { return GetHeight(); } }
-
         protected abstract int GetWidth();
         protected abstract int GetHeight();
 
+        public int Width { get; protected set; }
+        public int Height { get; protected set; }
         public IEnumerable<IPanel> Children { get { return _panels; } }
 
         public void AddChild(IPanel panel) {
@@ -67,28 +67,20 @@ namespace MindTouch.TextUI {
 
         protected abstract void Update();
 
-        protected char[][] BuildCanvas() {
-            var buffer = new char[Height][];
-            for(var i = 0; i < buffer.Length; i++) {
-                buffer[i] = new char[Width];
-            }
-            foreach(var panel in _panels) {
-                var panelCanvas = panel.GetCanvas();
-                if(panel.Left > Width || panel.Left + panel.Width < 0 || panel.Top > Height || panel.Top + panel.Height < 0) {
-
-                    // panel is outside the host's bounds
-                    continue;
-                }
-                for(var row = panel.Top; row < Height; row++) {
-                    var rowSourceStart = Math.Max(0, -panel.Left);
-                    var rowDestinationStart = Math.Max(0, panel.Left);
-                    var rowWidth = Math.Min(panel.Width, panel.Width - rowSourceStart - Math.Max(0, rowDestinationStart + panel.Width - rowSourceStart - Width));
-                    var panelRow = row - panel.Top;
-                    Array.Copy(panelCanvas[panelRow], rowDestinationStart, buffer[row], rowDestinationStart, rowWidth);
-                }
-            }
-            return buffer;
-        }
+        //protected virtual Canvas BuildCanvas(int left, int top, int width, int height) {
+        //    var buffer = new char[height][];
+        //    for(var i = 0; i < buffer.Length; i++) {
+        //        buffer[i] = new char[width];
+        //    }
+        //    var panels = from p in _panels
+        //                 let c = p.GetCanvas(left, top, width, height)
+        //                 where c != Canvas.Empty
+        //                 select c;
+        //    foreach(var panelCanvas in panels) {
+        //        panelCanvas.CopyTo(buffer);
+        //    }
+        //    return new Canvas(0, 0, width, height, buffer);
+        //}
 
         public void RemoveChild(IPanel panel) {
             lock(_syncroot) {
@@ -102,6 +94,12 @@ namespace MindTouch.TextUI {
             }
         }
 
-        public abstract event EventHandler DimensionsChanged;
+        public event EventHandler DimensionsChanged;
+
+        protected void OnDimensionsChanged() {
+            if(DimensionsChanged != null) {
+                DimensionsChanged(this, EventArgs.Empty);
+            }
+        }
     }
 }
