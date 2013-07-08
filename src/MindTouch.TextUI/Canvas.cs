@@ -1,9 +1,5 @@
 ﻿namespace MindTouch.TextUI {
-    public interface ICanvas {
-        void Write(int left, int top, char[] line);
-    }
-
-    public class Canvas : ICanvas {
+    public class Canvas {
         private readonly Line[] _lines;
 
         public Canvas(int width, int height) {

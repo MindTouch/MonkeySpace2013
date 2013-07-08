@@ -6,7 +6,7 @@ namespace MindTouch.MonkeySpace2013.Mud {
 
         public static void Main(string[] args) {
             var argList = (args ?? new string[0]).ToList();
-            var dungeon = new DungeonClient();
+            var dungeon = new DungeonLocalClient();
             dungeon.Play(argList.FirstOrDefault());
         }
     }

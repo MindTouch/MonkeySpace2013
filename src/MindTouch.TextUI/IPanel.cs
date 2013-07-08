@@ -1,23 +1,29 @@
 ﻿using System;
+using System.Drawing;
 
 namespace MindTouch.TextUI {
     public interface IPanel {
-        int Top { get; }
-        int Left { get; }
-        int Width { get; }
-        int Height { get; }
+        Point Position { get; }
+        Size Size { get; }
         bool HasFocus { get; }
         bool IsVisible { get; }
         IPanelHost Parent { get; set; }
         IEnvironment Environment { get; set; }
-        void Resize(int width, int height);
-        void Move(int left, int top);
+        void Resize(Size size);
+        void Move(Point position);
         void Focus();
         void Blur();
         void Show();
         void Hide();
         void Invalidate();
-        void Paint(ICanvas canvas, int left, int top, int width, int height);
-        event EventHandler PanelChanged;
+        void Paint(IEnvironment environment, Rectangle rect);
+        event EventHandler<InvalidationArgs> PanelChanged;
+    }
+
+    public class InvalidationArgs : EventArgs {
+        public readonly Rectangle Rect;
+        public InvalidationArgs(Rectangle rect) {
+            Rect = rect;
+        }
     }
 }

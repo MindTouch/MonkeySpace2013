@@ -43,11 +43,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RemoteRunner1Player.cs" />
+    <Compile Include="DungeonClient.cs" />
+    <Compile Include="DungeonLocalClient.cs" />
     <Compile Include="RemoteRunner.cs" />
     <Compile Include="LocalRunner.cs" />
     <Compile Include="DungeonRemoteClient.cs" />
     <Compile Include="Direction.cs" />
-    <Compile Include="DungeonClient.cs" />
     <Compile Include="DungeonServer.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Connector.cs" />
