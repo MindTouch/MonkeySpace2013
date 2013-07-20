@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using MindTouch.Clacks.Client;
+using MindTouch.MonkeySpace2013.Mud.Dungeon;
 
-namespace MindTouch.MonkeySpace2013.Mud {
+namespace MindTouch.MonkeySpace2013.Mud.Clacks {
     public class RemotePlayer : IPlayer {
         private readonly string _name;
         private readonly ClacksClient _client;
@@ -12,13 +13,15 @@ namespace MindTouch.MonkeySpace2013.Mud {
         public RemotePlayer(string name, IPEndPoint addr) {
             _name = name;
             _client = new ClacksClient(addr);
-            _client.Exec(R("JOIN"));
+            _name = _client.Exec(R("JOIN")).Arguments[0];
         }
+
+        public string Name { get { return _name; } }
 
         private Request R(string command) {
             return Request.Create(command).WithArgument(Uri.EscapeDataString(_name));
         }
-
+        
         public IEnumerable<string> Listen() {
             var r = _client.Exec(R("LISTEN").ExpectData("OK"));
             return Encoding.ASCII.GetString(r.Data).Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);

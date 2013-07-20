@@ -31,7 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>MindTouch.MonkeySpace2013.Mud.LocalRunner</StartupObject>
+    <StartupObject>MindTouch.MonkeySpace2013.Mud.Clacks.RemoteRunner1Player</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -43,27 +43,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="RemoteRunner1Player.cs" />
+    <Compile Include="Clacks\DungeonClientServer.cs" />
+    <Compile Include="Clacks\RemoteRunner1Player.cs" />
     <Compile Include="DungeonClient.cs" />
-    <Compile Include="DungeonLocalClient.cs" />
-    <Compile Include="RemoteRunner.cs" />
+    <Compile Include="Clacks\RemoteRunner.cs" />
     <Compile Include="LocalRunner.cs" />
-    <Compile Include="DungeonRemoteClient.cs" />
-    <Compile Include="Direction.cs" />
-    <Compile Include="DungeonServer.cs" />
-    <Compile Include="Entity.cs" />
-    <Compile Include="Connector.cs" />
+    <Compile Include="Clacks\DungeonRemoteClient.cs" />
+    <Compile Include="Dungeon\Direction.cs" />
+    <Compile Include="Clacks\DungeonServer.cs" />
+    <Compile Include="Dungeon\Entity.cs" />
+    <Compile Include="Dungeon\Connector.cs" />
     <Compile Include="TestRunner.cs" />
-    <Compile Include="IPlayer.cs" />
-    <Compile Include="Item.cs" />
-    <Compile Include="Player.cs" />
+    <Compile Include="Dungeon\IPlayer.cs" />
+    <Compile Include="Dungeon\Item.cs" />
+    <Compile Include="Dungeon\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RemotePlayer.cs" />
-    <Compile Include="Room.cs" />
-    <Compile Include="Space.cs" />
-    <Compile Include="Speech.cs" />
-    <Compile Include="TheHouse.cs" />
-    <Compile Include="TheVoid.cs" />
+    <Compile Include="Clacks\RemotePlayer.cs" />
+    <Compile Include="Dungeon\Room.cs" />
+    <Compile Include="Dungeon\Space.cs" />
+    <Compile Include="Dungeon\Speech.cs" />
+    <Compile Include="Dungeon\TheHouse.cs" />
+    <Compile Include="Dungeon\TheVoid.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\MindTouch.Clacks\src\MindTouch.Clacks.Client\MindTouch.Clacks.Client.csproj">

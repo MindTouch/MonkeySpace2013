@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace MindTouch.MonkeySpace2013.Mud {
+namespace MindTouch.MonkeySpace2013.Mud.Dungeon {
     public class Player : Entity, IPlayer {
         public List<Item> Inventory = new List<Item>();
         public Room Location;

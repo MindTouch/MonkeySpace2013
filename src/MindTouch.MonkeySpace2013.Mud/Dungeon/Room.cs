@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace MindTouch.MonkeySpace2013.Mud {
+namespace MindTouch.MonkeySpace2013.Mud.Dungeon {
     public class Room : Space {
         public List<Item> Items = new List<Item>();
         public List<Player> Players = new List<Player>();

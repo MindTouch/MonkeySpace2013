@@ -4,8 +4,9 @@ using System.Net;
 using System.Text;
 using MindTouch.Clacks.Server;
 using MindTouch.ConsoleUI;
+using MindTouch.MonkeySpace2013.Mud.Dungeon;
 
-namespace MindTouch.MonkeySpace2013.Mud {
+namespace MindTouch.MonkeySpace2013.Mud.Clacks {
 
     public static class ServerRunner {
         public static void Main(string[] args) {
@@ -31,9 +32,9 @@ namespace MindTouch.MonkeySpace2013.Mud {
             _server = ServerBuilder.CreateAsync(endpoint)
                 .WithCommand("JOIN").ExpectsNoData().HandledBy(r => {
                     var name = GetName(r);
-                    _house.Join(name);
-                    _log.Debug("server: '{0}' joined", name);
-                    return Response.Create("OK");
+                    var player = _house.Join(name);
+                    _log.Debug("server: '{0}' joined as '{1}'", name, player.Name);
+                    return Response.Create("OK").WithArgument(Uri.EscapeDataString(player.Name));
                 }).Register()
                 .WithCommand("LEAVE").ExpectsNoData().HandledBy(r => {
                     var player = GetPlayer(r);

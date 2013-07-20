@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MindTouch.MonkeySpace2013.Mud {
+namespace MindTouch.MonkeySpace2013.Mud.Dungeon {
     public class TheHouse {
 
         private int num = 0;

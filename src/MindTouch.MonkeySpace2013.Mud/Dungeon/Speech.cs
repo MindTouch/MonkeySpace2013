@@ -1,4 +1,4 @@
-namespace MindTouch.MonkeySpace2013.Mud {
+namespace MindTouch.MonkeySpace2013.Mud.Dungeon {
     public class Speech {
         public Room Where;
         public Player Who;

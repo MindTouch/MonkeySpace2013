@@ -1,17 +1,16 @@
 using System;
 using System.Net;
+using MindTouch.MonkeySpace2013.Mud.Dungeon;
 
-namespace MindTouch.MonkeySpace2013.Mud {
-    public class DungeonRemoteClient : DungeonClient, IDisposable {
+namespace MindTouch.MonkeySpace2013.Mud.Clacks {
+    public class DungeonClientServer : DungeonClient, IDisposable {
         private readonly IPEndPoint _endPoint;
 
         private readonly DungeonServer _server;
 
-        public DungeonRemoteClient(IPEndPoint endPoint, bool runServer) {
+        public DungeonClientServer(IPEndPoint endPoint) {
             _endPoint = endPoint;
-            if(runServer) {
-                _server = new DungeonServer(endPoint, _debug);
-            }
+            _server = new DungeonServer(_endPoint,_debug);
         }
 
         protected override IPlayer GetPlayer(string name) {

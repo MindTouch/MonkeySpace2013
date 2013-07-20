@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MindTouch.ConsoleUI;
+using MindTouch.MonkeySpace2013.Mud.Dungeon;
 
 namespace MindTouch.MonkeySpace2013.Mud {
-    public abstract class DungeonClient {
+    public class DungeonClient {
         
         private readonly string[] _commandList = new[] { "quit", "go", "look", "say", "debug" };
         private readonly string[] _directions = Enum.GetValues(typeof(Direction)).Cast<Direction>().Select(x => x.ToString().ToLower()).ToArray();
@@ -14,7 +15,7 @@ namespace MindTouch.MonkeySpace2013.Mud {
         protected int _viewHeight;
         protected int _viewTop;
 
-        protected DungeonClient() {
+        public DungeonClient() {
             var host = new ConsoleViewHost();
             var topHalf = Console.WindowHeight / 2;
             _viewHeight = Console.WindowHeight - topHalf;
@@ -24,6 +25,8 @@ namespace MindTouch.MonkeySpace2013.Mud {
             _view = new FramedView(host, 0, 0, Console.WindowWidth, Console.WindowHeight - 3, _debug);
             _input = new FramedView(host, 0, Console.WindowHeight - 3, Console.WindowWidth, 3, _debug) { Title = "Command" };
         }
+
+        public ILog Log { get { return _debug; } }
 
         public void Play(string name) {
             using(var listener = new System.Timers.Timer(200))
@@ -112,7 +115,9 @@ namespace MindTouch.MonkeySpace2013.Mud {
                 }
         }
 
-        protected abstract IPlayer GetPlayer(string name);
+        protected virtual IPlayer GetPlayer(string name){
+            return new TheHouse().Join(name);
+        }
 
         private LineEditor.Completion AutoComplete(string line, int pos) {
             var parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
