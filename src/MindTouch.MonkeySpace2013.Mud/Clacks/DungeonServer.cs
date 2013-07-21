@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using System.Text;
 using MindTouch.Clacks.Server;
@@ -7,19 +6,6 @@ using MindTouch.ConsoleUI;
 using MindTouch.MonkeySpace2013.Mud.Dungeon;
 
 namespace MindTouch.MonkeySpace2013.Mud.Clacks {
-
-    public static class ServerRunner {
-        public static void Main(string[] args) {
-            var argList = (args ?? new string[0]).ToList();
-            var addr = IPAddress.Parse(argList.FirstOrDefault() ?? "127.0.01");
-            var port = Int32.Parse(argList.ElementAtOrDefault(1) ?? "1234");
-            var host = new ConsoleViewHost();
-            var log = (new FramedView(host, 0, 0, Console.WindowWidth, Console.WindowHeight) { Title = "Dungeon Server" }) as ILog;
-            using(new DungeonServer(new IPEndPoint(addr, port), log)) {
-                Console.ReadKey();
-            }
-        }
-    } 
     public class DungeonServer : IDisposable {
         private readonly ILog _log;
 
