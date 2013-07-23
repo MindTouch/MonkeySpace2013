@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Clacks\DungeonClientServer.cs" />
     <Compile Include="Clacks\RemoteRunner1Player.cs" />
+    <Compile Include="Clacks\ServerRunner.cs" />
     <Compile Include="DungeonClient.cs" />
     <Compile Include="Clacks\RemoteRunner.cs" />
     <Compile Include="LocalRunner.cs" />

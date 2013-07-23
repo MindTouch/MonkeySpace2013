@@ -16,6 +16,9 @@ namespace MindTouch.ConsoleUI {
             _top = top;
             _width = width;
             _height = height;
+            if(_width <= 2 || _height <= 2) {
+                Hide();
+            }
         }
 
         public override int Top {
@@ -57,6 +60,7 @@ namespace MindTouch.ConsoleUI {
                 Invalidate();
             }
         }
+
         public override IEnumerable<char[]> VisibleBuffer {
             get {
                 var inside = base.VisibleBuffer.ToArray();

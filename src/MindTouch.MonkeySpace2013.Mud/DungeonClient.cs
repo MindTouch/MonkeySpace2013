@@ -14,12 +14,14 @@ namespace MindTouch.MonkeySpace2013.Mud {
         protected readonly FramedView _debug;
         protected int _viewHeight;
         protected int _viewTop;
+        private Popup _completionPopup;
 
         public DungeonClient() {
             var host = new ConsoleViewHost();
             var topHalf = Console.WindowHeight / 2;
             _viewHeight = Console.WindowHeight - topHalf;
             _viewTop = topHalf - 3;
+            _completionPopup = new Popup(host);
             _debug = new FramedView(host, 0, 0, Console.WindowWidth, _viewTop) { Title = "Debug" };
             _debug.Hide();
             _view = new FramedView(host, 0, 0, Console.WindowWidth, Console.WindowHeight - 3, _debug);
@@ -32,7 +34,7 @@ namespace MindTouch.MonkeySpace2013.Mud {
             using(var listener = new System.Timers.Timer(200))
                 using(var player = GetPlayer(name)) {
                     _input.Focus();
-                    var le = new LineEditor(_input, "dungeon") { TabAtStartCompletes = true, AutoCompleteEvent = AutoComplete };
+                    var le = new LineEditor(_input, _completionPopup, "dungeon") { TabAtStartCompletes = true, AutoCompleteEvent = AutoComplete };
                     _view.WriteLine(player.Look());
                     string line = "";
                     listener.Elapsed += (sender, args) => {
