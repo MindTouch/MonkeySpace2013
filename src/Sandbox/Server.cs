@@ -6,7 +6,6 @@ using MindTouch.Clacks.Server;
 using Response = MindTouch.Clacks.Server.Response;
 
 namespace Sandbox {
-
     public static class App {
 
         public static void Main(string[] args) {
@@ -41,9 +40,9 @@ namespace Sandbox {
                     return Response.Create("WAT");
                 })
                 .WithErrorHandler((r, e) => Response.Create("ERROR").WithData(Encoding.UTF8.GetBytes(e.StackTrace)))
-                .OnClientConnected((id,ip) => Console.WriteLine("Got client '{0}' from '{1}", id, ip))
-                .OnClientDisconnected(id => Console.WriteLine("Client '{0}' left", id))
-                .OnReceivedCommand(info => Console.WriteLine("Args: {0}", string.Join(",", info.Args)))      
+                .OnClientConnected((id, ip) => Console.WriteLine("Got client '{0}' from '{1}", id, ip))
+                .OnClientDisconnected((id, ip) => Console.WriteLine("Client '{0}' left", id))
+                .OnReceivedCommand(info => Console.WriteLine("Args: {0}", string.Join(",", info.Args)))
                 .Build();
         }
 

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using MindTouch.ConsoleUI;
 
-namespace MindTouch.MonkeySpace2013.Mud.Clacks {
+namespace MindTouch.MonkeySpace2013.Server {
     public static class ServerRunner {
         public static void Main(string[] args) {
             var argList = (args ?? new string[0]).ToList();

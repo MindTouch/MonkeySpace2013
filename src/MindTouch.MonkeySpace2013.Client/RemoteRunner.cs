@@ -1,8 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 
-namespace MindTouch.MonkeySpace2013.Mud.Clacks {
-    public static class RemoteRunner1Player {
+namespace MindTouch.MonkeySpace2013.Client {
+    public static class RemoteRunner {
 
         public static void Main(string[] args) {
             var argList = (args ?? new string[0]).ToList();
@@ -10,9 +11,7 @@ namespace MindTouch.MonkeySpace2013.Mud.Clacks {
             var port = int.Parse(argList.ElementAtOrDefault(2) ?? "1234");
             var endpoint = new IPEndPoint(addr, port);
             var dungeon = new DungeonRemoteClient(endpoint);
-            using(new DungeonServer(endpoint, dungeon.Log)) {
-                dungeon.Play(argList.FirstOrDefault());
-            }
+            dungeon.Play(argList.FirstOrDefault());
         }
     }
 }
