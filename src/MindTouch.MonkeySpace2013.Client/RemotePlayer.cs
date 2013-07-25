@@ -12,7 +12,7 @@ namespace MindTouch.MonkeySpace2013.Client {
 
         public RemotePlayer(string name, IPEndPoint addr) {
             _client = new ClacksClient(addr);
-            _name = _client.Exec("JOIN", r => r.WithData(name)).Arguments[0];
+            _name = Encoding.ASCII.GetString(_client.Exec("JOIN", r => r.WithData(name).ExpectData("OK")).Data);
         }
 
         public string Name { get { return _name; } }

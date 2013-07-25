@@ -48,7 +48,6 @@
     <Compile Include="Dungeon\Direction.cs" />
     <Compile Include="Dungeon\Entity.cs" />
     <Compile Include="Dungeon\Connector.cs" />
-    <Compile Include="TestRunner.cs" />
     <Compile Include="Dungeon\IPlayer.cs" />
     <Compile Include="Dungeon\Item.cs" />
     <Compile Include="Dungeon\Player.cs" />

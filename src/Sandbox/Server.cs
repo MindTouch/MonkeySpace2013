@@ -15,34 +15,41 @@ namespace Sandbox {
             }
         }
     }
-    public class Server : IDisposable {
 
+    public class Server : IDisposable {
 
         private readonly ClacksServer _server;
 
         public Server() {
             _server = ServerBuilder.CreateAsync(new IPEndPoint(IPAddress.Parse("11.11.11.10"), 12345))
                 .WithCommand("ECHO")
-                    .HandledBy(r => {
+                    .HandledBy((r,c) => {
                         Console.WriteLine("got ECHO");
-                        return Response.Create("ECHO").WithArguments(r.Arguments);
+                        c(Response.Create("ECHO").WithArguments(r.Arguments));
                     })
                     .Register()
                 .WithCommand("REPEAT")
                     .ExpectsData()
-                    .HandledBy(r => {
+                    .HandledBy((r,c) => {
                         var n = int.Parse(r.Arguments[0]);
-                        return Enumerable.Repeat(Response.Create("OK").WithData(r.Data), n);
+                        var wat = r.Arguments[1];
+                        var enumerator = Enumerable.Repeat(wat, n).Select((X,I) => new {X,I}).GetEnumerator();
+                        Action f = null;
+                        f = () => {
+                            if(!enumerator.MoveNext()) {
+                                c(Response.Create("DONE"), null);
+                                return;
+                            }
+                            var v = enumerator.Current;
+                            c(Response.Create("OK").WithArgument(v.I).WithArgument(v.X), f);
+                        };
+                        f();
                     })
                     .Register()
                 .WithDefaultHandler(r => {
                     Console.WriteLine("Got '{0}'", r.Command);
                     return Response.Create("WAT");
                 })
-                .WithErrorHandler((r, e) => Response.Create("ERROR").WithData(Encoding.UTF8.GetBytes(e.StackTrace)))
-                .OnClientConnected((id, ip) => Console.WriteLine("Got client '{0}' from '{1}", id, ip))
-                .OnClientDisconnected((id, ip) => Console.WriteLine("Client '{0}' left", id))
-                .OnReceivedCommand(info => Console.WriteLine("Args: {0}", string.Join(",", info.Args)))
                 .Build();
         }
 
