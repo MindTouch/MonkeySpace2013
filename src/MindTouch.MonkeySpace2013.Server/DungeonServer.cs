@@ -45,7 +45,7 @@ namespace MindTouch.MonkeySpace2013.Server {
                 }).Register()
                 .WithCommand("GO").ExpectsNoData().HandledBy(r => {
                     var player = _playerConnectionLookup[r.Client];
-                    var direction = (Direction)Enum.Parse(typeof(Direction), r.Arguments[1]);
+                    var direction = (Direction)Enum.Parse(typeof(Direction), r.Arguments[0], true);
                     return Response.Create("OK").WithData(Encode(player.Go(direction)));
                 }).Register()
                 .WithCommand("SAY").ExpectsData().HandledBy(r => {
