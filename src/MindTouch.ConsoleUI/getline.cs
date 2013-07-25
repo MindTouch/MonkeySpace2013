@@ -25,6 +25,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Threading;
@@ -140,11 +141,13 @@ namespace MindTouch.ConsoleUI {
 
         static Handler[] handlers;
         private readonly IView window;
+        private readonly IPopup _completionPane;
 
-        public LineEditor(IView window, string name) : this(window, name, 10) { }
+        public LineEditor(IView window, IPopup completionPane, string name) : this(window, completionPane, name, 10) { }
 
-        public LineEditor(IView window, string name, int histsize) {
+        public LineEditor(IView window, IPopup completionPane, string name, int histsize) {
             this.window = window;
+            _completionPane = completionPane;
             handlers = new Handler[] {
 				new Handler (ConsoleKey.Home,       CmdHome),
 				new Handler (ConsoleKey.End,        CmdEnd),
@@ -385,14 +388,19 @@ namespace MindTouch.ConsoleUI {
                         if(last != -1) {
                             InsertTextAtCursor(completions[0].Substring(0, last + 1));
                         }
-                        window.WriteLine();
+                        var completionContent = new List<string>();
+
+                        //window.WriteLine();
                         foreach(string s in completions) {
-                            window.Write(completion.Prefix);
-                            window.Write(s);
-                            window.WriteLine();
+                            completionContent.Add(completion.Prefix + s);
+                            //window.Write(completion.Prefix);
+                            //window.Write(s);
+                            //window.WriteLine();
                         }
-                        window.WriteLine();
-                        Render();
+                        //window.WriteLine();
+                        _completionPane.SetContent(completionContent);
+                        _completionPane.Show();
+                        //Render();
                         ForceCursor(cursor);
                     }
                 } else
@@ -727,7 +735,7 @@ namespace MindTouch.ConsoleUI {
                     mod = cki.Modifiers;
 
                 bool handled = false;
-
+                _completionPane.Hide();
                 foreach(Handler handler in handlers) {
                     ConsoleKeyInfo t = handler.CKI;
 
@@ -736,7 +744,8 @@ namespace MindTouch.ConsoleUI {
                         handler.KeyHandler();
                         last_handler = handler.KeyHandler;
                         break;
-                    } else if(t.KeyChar == cki.KeyChar && t.Key == ConsoleKey.Zoom) {
+                    }
+                    if(t.KeyChar == cki.KeyChar && t.Key == ConsoleKey.Zoom) {
                         handled = true;
                         handler.KeyHandler();
                         last_handler = handler.KeyHandler;

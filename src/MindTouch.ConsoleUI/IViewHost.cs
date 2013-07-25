@@ -10,5 +10,7 @@ namespace MindTouch.ConsoleUI {
         event ConsoleCancelEventHandler CancelKeyPress;
         void AddView(IPane view);
         void Invalidate();
+        int CursorTop { get; }
+        int CursorLeft { get; }
     }
 }

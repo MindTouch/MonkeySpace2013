@@ -11,6 +11,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MindTouch.ConsoleUI", "Mind
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MindTouch.MonkeySpace2013.Mud", "MindTouch.MonkeySpace2013.Mud\MindTouch.MonkeySpace2013.Mud.csproj", "{619803A0-F5D2-43A6-9543-682077D57B72}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox", "Sandbox\Sandbox.csproj", "{00D8E2F7-5958-4E3C-9EC6-F409A8709E76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MindTouch.MonkeySpace2013.Server", "MindTouch.MonkeySpace2013.Server\MindTouch.MonkeySpace2013.Server.csproj", "{F4C98B84-06E2-43FE-BC80-0A2DE9D02A1D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MindTouch.MonkeySpace2013.Client", "MindTouch.MonkeySpace2013.Client\MindTouch.MonkeySpace2013.Client.csproj", "{D14F12C8-8CC7-4849-AD20-E0C0836DD567}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +39,18 @@ Global
 		{619803A0-F5D2-43A6-9543-682077D57B72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{619803A0-F5D2-43A6-9543-682077D57B72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{619803A0-F5D2-43A6-9543-682077D57B72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00D8E2F7-5958-4E3C-9EC6-F409A8709E76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00D8E2F7-5958-4E3C-9EC6-F409A8709E76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00D8E2F7-5958-4E3C-9EC6-F409A8709E76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00D8E2F7-5958-4E3C-9EC6-F409A8709E76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4C98B84-06E2-43FE-BC80-0A2DE9D02A1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4C98B84-06E2-43FE-BC80-0A2DE9D02A1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4C98B84-06E2-43FE-BC80-0A2DE9D02A1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4C98B84-06E2-43FE-BC80-0A2DE9D02A1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D14F12C8-8CC7-4849-AD20-E0C0836DD567}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D14F12C8-8CC7-4849-AD20-E0C0836DD567}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D14F12C8-8CC7-4849-AD20-E0C0836DD567}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D14F12C8-8CC7-4849-AD20-E0C0836DD567}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

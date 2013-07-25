@@ -22,6 +22,9 @@ namespace MindTouch.ConsoleUI {
             }
         }
 
+        public int CursorTop { get { return Console.CursorTop; } }
+        public int CursorLeft { get { return Console.CursorLeft; } }
+
         public void Draw(IPane pane) {
             AssertPane(pane);
 
