@@ -23,12 +23,31 @@ namespace Sandbox {
         public Server() {
             _server = ServerBuilder.CreateAsync(new IPEndPoint(IPAddress.Parse("11.11.11.10"), 12345))
                 .WithCommand("ECHO")
+                    .ExpectsNoData()
+                    .HandledBy(r => Response.Create("OK").WithArguments(r.Arguments))
+                    .Register()
+                .WithCommand("REPEAT")
+                    .ExpectsNoData()
+                    .HandledBy(r => {
+                        var n = int.Parse(r.Arguments[0]);
+                        var wat = r.Arguments[1];
+                        var enumerable = Enumerable.Repeat(wat, n)
+                            .Select((x, i) => Response.Create("OK").WithArgument(i).WithArgument(x))
+                            .Concat(new[] { Response.Create("DONE") });
+                        return enumerable;
+                    })
+                    .Register()
+
+                // Async Handler version of ECHO
+                .WithCommand("ECHO2")
                     .HandledBy((r,c) => {
                         Console.WriteLine("got ECHO");
                         c(Response.Create("ECHO").WithArguments(r.Arguments));
                     })
                     .Register()
-                .WithCommand("REPEAT")
+
+                // Async Handler version of ECHO
+                .WithCommand("REPEAT2")
                     .ExpectsData()
                     .HandledBy((r,c) => {
                         var n = int.Parse(r.Arguments[0]);
